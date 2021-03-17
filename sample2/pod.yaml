@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  creationTimestamp: null
+  labels:
+    run: helloworld
+  name: helloworld
+spec:
+  containers:
+    - name: helloworld
+      image: gcr.io/google-samples/hello-app:1.0
+      ports:
+        - containerPort: 8080
+      resources: {}
+  dnsPolicy: ClusterFirst
+  restartPolicy: Never
+status: {}
