@@ -1,0 +1,36 @@
+# Service-NodePort
+kind: Service
+apiVersion: v1
+metadata:
+  name: sample-service-2
+spec:
+  type: NodePort
+  ports:
+    - name: 'http-port'
+      port: 8080
+      targetPort: 5678 # Default port for image
+  selector:
+    app: sample-app-2
+---
+# Deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sample-deployment-2
+spec:
+  revisionHistoryLimit: 3 # ロールバック可能な履歴数
+  progressDeadlineSeconds: 3600 # Recreate/RollingUpdate処理のタイムアウト時間
+  replicas: 3
+  selector:
+    matchLabels:
+      app: sample-app-2
+  template:
+    metadata:
+      labels:
+        app: sample-app-2
+    spec:
+      containers:
+        - name: sample-app-2
+          image: hashicorp/http-echo
+          args:
+            - "-text=sample2"
