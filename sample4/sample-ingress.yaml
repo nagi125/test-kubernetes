@@ -1,0 +1,56 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: sample-ingress
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+spec:
+  rules:
+    - http:
+        paths:
+          - path: '/'
+            pathType: Prefix
+            backend:
+              service:
+                name: laravel-apache-service
+                port:
+                  number: 8080
+---
+# Service-NodePort
+kind: Service
+apiVersion: v1
+metadata:
+  name: laravel-apache-service
+spec:
+  type: NodePort
+  ports:
+    - name: 'http-port'
+      port: 8080
+      targetPort: 80 # Default port for image
+      protocol: TCP
+  selector:
+    app: laravel-apache-app
+---
+# Deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: laravel-apache-app
+spec:
+  revisionHistoryLimit: 3 # ロールバック可能な履歴数
+  progressDeadlineSeconds: 3600 # Recreate/RollingUpdate処理のタイムアウト時間
+  replicas: 3
+  selector:
+    matchLabels:
+      app: laravel-apache-app
+  template:
+    metadata:
+      labels:
+        app: laravel-apache-app
+    spec:
+      containers:
+        - name: laravel-apache-app
+          image: laravel-apache-sample
+          imagePullPolicy: Never # LocalImageをPullする
+          ports:
+            - containerPort: 80
