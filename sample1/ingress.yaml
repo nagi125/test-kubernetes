@@ -3,7 +3,7 @@ kind: Ingress
 metadata:
   name: helloworld
   annotations:
-    nginx.ingres.kubernetes.io/rewrite-target: /
+    nginx.ingress.kubernetes.io/rewrite-target: /
 spec:
   rules:
     - http:
