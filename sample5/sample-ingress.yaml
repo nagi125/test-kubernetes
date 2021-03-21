@@ -53,7 +53,7 @@ spec:
           emptyDir: {}
       containers:
         - name: nginx
-          image: cms-laravel-nginx
+          image: cms-laravel-nginx-k8s
           imagePullPolicy: Never
           volumeMounts:
             - name: shared-data
@@ -61,7 +61,7 @@ spec:
           ports:
             - containerPort: 80
         - name: app
-          image: cms-laravel-app
+          image: cms-laravel-app-k8s
           imagePullPolicy: Never
           volumeMounts:
             - name: shared-data
